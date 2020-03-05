@@ -6,7 +6,7 @@ import android.content.Context;
 
 import android.os.Bundle;
 
-public class BookLoaderCallbacks implements LoaderManager.LoaderCallbacks<String> {
+abstract class BookLoaderCallbacks implements LoaderManager.LoaderCallbacks<String> {
 
     private Context _context;
 
@@ -18,6 +18,5 @@ public class BookLoaderCallbacks implements LoaderManager.LoaderCallbacks<String
     public Loader<String> onCreateLoader(int id, Bundle args){
         return new BookLoader(_context, "hola", "adios");
     }
-
 
 }
