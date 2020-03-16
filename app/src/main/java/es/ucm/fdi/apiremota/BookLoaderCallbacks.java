@@ -13,7 +13,7 @@ abstract class BookLoaderCallbacks implements LoaderManager.LoaderCallbacks<List
     private Context _context;
     // TODO
     // nos lo hemos inventado
-    public static String EXTRA_QUERY = "query";
+    public static String EXTRA_QUERY = "queryString";
     public static String EXTRA_PRINT_TYPE = "print_type";
 
     public BookLoaderCallbacks(Context context){
