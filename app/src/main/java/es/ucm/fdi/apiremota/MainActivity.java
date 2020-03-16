@@ -55,8 +55,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void searchBooks(View view){
         int radioButtonId = radioGroup.getCheckedRadioButtonId();
-        String queryString = authors.toString() + " " + title.toString();
-        String printType = findViewById(radioButtonId).toString();
+        String queryString = authors.getText().toString() + " " + title.getText().toString();
+        RadioButton typeRadioButton = findViewById(radioButtonId);
+        String printType = typeRadioButton.getText().toString();
 
         // TODO
         // puede que tenga que ser distinto

@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.loader.content.AsyncTaskLoader;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -62,11 +63,21 @@ public class BookLoader extends AsyncTaskLoader<List<BookInfo>> {
 
     private String convertInputToString(InputStream stream, int len) {
         try {
+            /*
             Reader reader = null;
-            reader = new InputStreamReader(stream, "UTF-8");
+            reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
             char[] buffer = new char[len];
             reader.read(buffer);
             return new String(buffer);
+            */
+            // TODO
+            // esto lo he visto en internet para poder tener toda la respuesta en un String, y no solo 500 caracteres
+            BufferedReader r = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+            StringBuilder total = new StringBuilder();
+            for (String line; (line = r.readLine()) != null; ) {
+                total.append(line).append('\n');
+            }
+            return total.toString();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
