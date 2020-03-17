@@ -20,6 +20,16 @@ public class BookInfo {
     private String authors;
     private URL infoLink;
 
+    public BookInfo(){
+        try {
+            title = "Not found";
+            authors = "Not found";
+            infoLink = new URL("");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static List<BookInfo> fromJsonResponse(String s){
         JSONObject data = null;
         List<BookInfo> results = new ArrayList<BookInfo>();
@@ -27,13 +37,19 @@ public class BookInfo {
             data = new JSONObject(s);
             JSONArray itemsArray = data.getJSONArray("items");
             for(int i = 0; i < itemsArray.length(); i++) {
-                results.get(i).title = itemsArray.getJSONObject(i).getString("volumeInfo.title");
-                // TODO
-                // esto puede petar
-                results.get(i).authors = itemsArray.getJSONObject(i).getString("volumeInfo.authors");
-                results.get(i).infoLink = new URL(itemsArray.getJSONObject(i).getString("volumeInfo.infoLink"));
+                results.add(new BookInfo());
+                JSONObject volumeInfo = itemsArray.getJSONObject(i).getJSONObject("volumeInfo");
+                if(volumeInfo.has("title")){
+                    results.get(i).title = volumeInfo.getString("title");
+                }
+                if(volumeInfo.has("authors")){
+                    results.get(i).authors = volumeInfo.getString("authors");
+                }
+                if(volumeInfo.has("infoLink")){
+                    results.get(i).infoLink = new URL(volumeInfo.getString("infoLink"));
+                }
             }
-        } catch (JSONException | MalformedURLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return results;

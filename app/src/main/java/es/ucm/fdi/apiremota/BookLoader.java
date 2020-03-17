@@ -97,12 +97,14 @@ public class BookLoader extends AsyncTaskLoader<List<BookInfo>> {
         final String QUERY_PARAM = "q";
         // Parameter to limit search results.
         final String MAX_RESULTS = "maxResults";
+        // Parameter to filter by print type
+        final String PRINT_TYPE = "printType";
 
         // Build up the query URI, limiting results to 5 printed books.
         Uri builtURI = Uri.parse(BOOK_BASE_URL).buildUpon()
                 .appendQueryParameter(QUERY_PARAM, queryString)
                 .appendQueryParameter(MAX_RESULTS, "40")
-                .appendQueryParameter(printType, "books")
+                .appendQueryParameter(PRINT_TYPE, printType)
                 .build();
 
         return builtURI.toString();
