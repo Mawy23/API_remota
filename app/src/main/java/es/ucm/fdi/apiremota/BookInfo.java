@@ -20,14 +20,34 @@ public class BookInfo {
     private String authors;
     private URL infoLink;
 
-    public BookInfo(){
-        try {
-            title = "Not found";
-            authors = "Not found";
-            infoLink = new URL("");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+    public BookInfo(String title, String authors, URL infoLink) {
+        this.title = title;
+        this.authors = authors;
+        this.infoLink = infoLink;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthors() {
+        return authors;
+    }
+
+    public URL getInfoLink() {
+        return infoLink;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthors(String authors) {
+        this.authors = authors;
+    }
+
+    public void setInfoLink(URL infoLink) {
+        this.infoLink = infoLink;
     }
 
     public static List<BookInfo> fromJsonResponse(String s){
@@ -35,19 +55,28 @@ public class BookInfo {
         List<BookInfo> results = new ArrayList<BookInfo>();
         try {
             data = new JSONObject(s);
-            JSONArray itemsArray = data.getJSONArray("items");
+            JSONArray itemsArray = new JSONArray();
+            if(data.has("items")) {
+                itemsArray = data.getJSONArray("items");
+            }
             for(int i = 0; i < itemsArray.length(); i++) {
-                results.add(new BookInfo());
                 JSONObject volumeInfo = itemsArray.getJSONObject(i).getJSONObject("volumeInfo");
+
+                String title = "Not found";
+                String authors = "Not found";
+                URL infoLink = new URL("http://www.example.com/docs/resource1.html");
+
                 if(volumeInfo.has("title")){
-                    results.get(i).title = volumeInfo.getString("title");
+                    title = volumeInfo.getString("title");
                 }
                 if(volumeInfo.has("authors")){
-                    results.get(i).authors = volumeInfo.getString("authors");
+                    authors = volumeInfo.getString("authors");
                 }
                 if(volumeInfo.has("infoLink")){
-                    results.get(i).infoLink = new URL(volumeInfo.getString("infoLink"));
+                    infoLink = new URL(volumeInfo.getString("infoLink"));
                 }
+
+                results.add(new BookInfo(title, authors, infoLink));
             }
         } catch (Exception e) {
             e.printStackTrace();

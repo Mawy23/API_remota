@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">API remota</string>
+    <string name="app_title">Book search</string>
+    <string name="authors_field">Book authors</string>
+    <string name="title_field">Book title</string>
+    <string name="searchBooks_button">SEARCH BOOKS</string>
+    <string name="printType_all">all</string>
+    <string name="printType_books">books</string>
+    <string name="printType_magazines">magazines</string>
 </resources>

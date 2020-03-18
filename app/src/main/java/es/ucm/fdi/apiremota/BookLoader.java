@@ -10,13 +10,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-
-import static es.ucm.fdi.apiremota.BookInfo.fromJsonResponse;
 
 public class BookLoader extends AsyncTaskLoader<List<BookInfo>> {
 
@@ -41,9 +38,7 @@ public class BookLoader extends AsyncTaskLoader<List<BookInfo>> {
             Log.d("BookLoader", "The response is: " + response);
             inputStream = connection.getInputStream();
             String contentAsString = convertInputToString(inputStream, 500);
-            // TODO
-            // puede estar mal
-            return fromJsonResponse(contentAsString);
+            return BookInfo.fromJsonResponse(contentAsString);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {

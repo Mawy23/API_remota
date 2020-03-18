@@ -11,8 +11,7 @@ import java.util.List;
 abstract class BookLoaderCallbacks implements LoaderManager.LoaderCallbacks<List<BookInfo>> {
 
     private Context _context;
-    // TODO
-    // nos lo hemos inventado
+
     public static String EXTRA_QUERY = "queryString";
     public static String EXTRA_PRINT_TYPE = "print_type";
 
