@@ -16,8 +16,18 @@ public class BooksResultListAdapter extends RecyclerView.Adapter<BooksResultList
 
     // TODO
     // private List<BookInfo> mBooksData = new ArrayList<>();
-    private ArrayList<BookInfo> mBooksData = new ArrayList<BookInfo>();
+    private ArrayList<BookInfo> mBooksData;
     private LayoutInflater mInflater;
+
+    private OnItemClickListener mListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
+    }
 
     public BooksResultListAdapter(Context context, ArrayList<BookInfo> bookInfoList){
         mInflater = LayoutInflater.from(context);
@@ -37,12 +47,11 @@ public class BooksResultListAdapter extends RecyclerView.Adapter<BooksResultList
     }
 
 
-    @NonNull
     @Override
     public BooksResultListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate an item view.
         View mItemView = mInflater.inflate(R.layout.search_result_item, parent, false);
-        return new ViewHolder(mItemView, this);
+        return new ViewHolder(mItemView, this, mListener);
     }
 
     @Override
@@ -62,7 +71,7 @@ public class BooksResultListAdapter extends RecyclerView.Adapter<BooksResultList
         return mBooksData.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final BooksResultListAdapter mAdapter;
 
@@ -72,7 +81,7 @@ public class BooksResultListAdapter extends RecyclerView.Adapter<BooksResultList
         private TextView item_infoLink_textView;
 
 
-        public ViewHolder(@NonNull View itemView, BooksResultListAdapter adapter) {
+        public ViewHolder(View itemView, BooksResultListAdapter adapter, final OnItemClickListener listener) {
             super(itemView);
 
             // Get the layout
@@ -82,6 +91,19 @@ public class BooksResultListAdapter extends RecyclerView.Adapter<BooksResultList
 
             // Associate with this adapter
             this.mAdapter = adapter;
+
+            // Set onClickListener
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION){
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 }

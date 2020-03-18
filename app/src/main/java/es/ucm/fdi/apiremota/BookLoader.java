@@ -44,7 +44,9 @@ public class BookLoader extends AsyncTaskLoader<List<BookInfo>> {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            connection.disconnect();
+            if (connection != null) {
+                connection.disconnect();
+            }
             if(inputStream != null){
                 try {
                     inputStream.close();
@@ -67,6 +69,7 @@ public class BookLoader extends AsyncTaskLoader<List<BookInfo>> {
             */
             // TODO
             // esto lo he visto en internet para poder tener toda la respuesta en un String, y no solo 500 caracteres
+            // aún así salta una excepción de stackoverflow, pero luego funciona
             BufferedReader r = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
             StringBuilder total = new StringBuilder();
             for (String line; (line = r.readLine()) != null; ) {
@@ -83,7 +86,7 @@ public class BookLoader extends AsyncTaskLoader<List<BookInfo>> {
         forceLoad();
     }
 
-    public String getBookInfoJson(String queryString, String printType) {
+    private String getBookInfoJson(String queryString, String printType) {
         // Base URL for the Books API.
         final String BOOK_BASE_URL =
                 "https://www.googleapis.com/books/v1/volumes?";

@@ -1,12 +1,12 @@
 package es.ucm.fdi.apiremota;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -14,14 +14,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     final int BOOK_LOADER_ID = 0;
+
     private EditText authors;
     private EditText title;
     private TextView results_Title;
@@ -30,20 +29,11 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private BooksResultListAdapter mAdapter;
 
+    private List<BookInfo> mBooksData = new ArrayList<>();
 
     // TODO
-    // no sabemos si tiene que implementar esos métodos
-    private BookLoaderCallbacks bookLoaderCallbacks = new BookLoaderCallbacks(this) {
-        @Override
-        public void onLoadFinished(@NonNull Loader<List<BookInfo>> loader, List<BookInfo> data) {
-
-        }
-
-        @Override
-        public void onLoaderReset(@NonNull Loader<List<BookInfo>> loader) {
-
-        }
-    };
+    // ¿Hay que pasarle this?
+    private BookLoaderCallbacks bookLoaderCallbacks = new BookLoaderCallbacks(this);
 
 
     @Override
@@ -63,27 +53,6 @@ public class MainActivity extends AppCompatActivity {
         radioGroup = (RadioGroup) findViewById(R.id.type);
 
         initRecyclerView();
-
-        List<BookInfo> listaProvisional = new ArrayList<BookInfo>();
-
-        try {
-            BookInfo entrada1 = new BookInfo("titulo1", "autores1", new URL("http://www.example.com/docs/resource1.html"));
-            BookInfo entrada2 = new BookInfo("titulo2", "autores2", new URL("http://www.example.com/docs/resource1.html"));
-            BookInfo entrada3 = new BookInfo("titulo3", "autores3", new URL("http://www.example.com/docs/resource1.html"));
-            BookInfo entrada4 = new BookInfo("titulo4", "autores4", new URL("http://www.example.com/docs/resource1.html"));
-            BookInfo entrada5 = new BookInfo("titulo5", "autores5", new URL("http://www.example.com/docs/resource1.html"));
-
-            listaProvisional.add(entrada1);
-            listaProvisional.add(entrada2);
-            listaProvisional.add(entrada3);
-            listaProvisional.add(entrada4);
-            listaProvisional.add(entrada5);
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        updateBooksResultList(listaProvisional);
     }
 
     private void initRecyclerView() {
@@ -94,14 +63,32 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mAdapter.setOnItemClickListener(new BooksResultListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Uri webPage = Uri.parse(mBooksData.get(position).getInfoLink().toString());
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
+
+                String title = getResources().getString(R.string.chooser_title);
+                Intent chooser = Intent.createChooser(intent, title);
+
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(chooser);
+                }
+            }
+        });
     }
 
     public void updateBooksResultList(List<BookInfo> bookInfos) {
+        mBooksData = bookInfos;
+
         if (bookInfos.size() == 0){
-            results_Title.setText("No Results Found");
+            results_Title.setText(R.string.no_results_found_title);
         }
         else {
-            results_Title.setText("Results");
+            results_Title.setText(R.string.results_found_title);
         }
 
         mAdapter.setBooksData(bookInfos);
@@ -109,16 +96,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void searchBooks(View view){
-        int radioButtonId = radioGroup.getCheckedRadioButtonId();
-        String queryString = authors.getText().toString() + " " + title.getText().toString();
-        RadioButton typeRadioButton = findViewById(radioButtonId);
-        String printType = typeRadioButton.getText().toString();
+        // The user didn't type anything
+        if (authors.getText().toString().equals("") && title.getText().toString().equals("")) {
+            results_Title.setText(R.string.no_data_results_title);
+            results_Title.setGravity(17);
+        }
+        else {
+            int radioButtonId = radioGroup.getCheckedRadioButtonId();
+            String queryString = "";
+            if (authors.getText().toString().equals("") && !title.getText().toString().equals("")) {
+                queryString = title.getText().toString();
+            }
+            else if (!authors.getText().toString().equals("") && title.getText().toString().equals("")) {
+                queryString = authors.getText().toString();
+            }
+            else if (!authors.getText().toString().equals("") && !title.getText().toString().equals("")) {
+                queryString = authors.getText().toString() + " " + title.getText().toString();
+            }
 
-        Bundle queryBundle = new Bundle();
-        queryBundle.putString(BookLoaderCallbacks.EXTRA_QUERY, queryString);
-        queryBundle.putString(BookLoaderCallbacks.EXTRA_PRINT_TYPE, printType);
-        LoaderManager.getInstance(this).restartLoader(BOOK_LOADER_ID, queryBundle, bookLoaderCallbacks);
+            RadioButton typeRadioButton = findViewById(radioButtonId);
+            String printType = typeRadioButton.getText().toString();
 
-         results_Title.setText("Loading...");
+            Bundle queryBundle = new Bundle();
+            queryBundle.putString(BookLoaderCallbacks.EXTRA_QUERY, queryString);
+            queryBundle.putString(BookLoaderCallbacks.EXTRA_PRINT_TYPE, printType);
+            LoaderManager.getInstance(this).restartLoader(BOOK_LOADER_ID, queryBundle, bookLoaderCallbacks);
+
+            results_Title.setText(R.string.results_loading_title);
+        }
     }
 }

@@ -30,39 +30,39 @@ public class BookInfo {
         return infoLink;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setAuthors(String authors) {
-        this.authors = authors;
-    }
-
-    public void setInfoLink(URL infoLink) {
-        this.infoLink = infoLink;
-    }
-
     public static List<BookInfo> fromJsonResponse(String s){
-        JSONObject data = null;
-        List<BookInfo> results = new ArrayList<BookInfo>();
+        JSONObject data;
+        List<BookInfo> results = new ArrayList<>();
         try {
             data = new JSONObject(s);
             JSONArray itemsArray = new JSONArray();
+            JSONArray authorsArray;
             if(data.has("items")) {
                 itemsArray = data.getJSONArray("items");
             }
             for(int i = 0; i < itemsArray.length(); i++) {
                 JSONObject volumeInfo = itemsArray.getJSONObject(i).getJSONObject("volumeInfo");
 
-                String title = "Not found";
-                String authors = "Not found";
+                String title = "Unknown";
+                String authors = "Unknown";
                 URL infoLink = new URL("http://www.example.com/docs/resource1.html");
 
                 if(volumeInfo.has("title")){
                     title = volumeInfo.getString("title");
                 }
                 if(volumeInfo.has("authors")){
-                    authors = volumeInfo.getString("authors");
+                    authors = "";
+                    authorsArray = volumeInfo.getJSONArray("authors");
+                    for(int j = 0; j < authorsArray.length(); j++) {
+                        authors += authorsArray.get(j).toString();
+                        if (j == authorsArray.length() - 2) {
+                            authors += " y ";
+                        }
+                        else if (j < authorsArray.length() - 2) {
+                            authors += ", ";
+                        }
+                    }
+
                 }
                 if(volumeInfo.has("infoLink")){
                     infoLink = new URL(volumeInfo.getString("infoLink"));
@@ -75,9 +75,4 @@ public class BookInfo {
         }
         return results;
     }
-
-
-
-
-
 }

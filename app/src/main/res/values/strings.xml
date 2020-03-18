@@ -7,4 +7,9 @@
     <string name="printType_all">all</string>
     <string name="printType_books">books</string>
     <string name="printType_magazines">magazines</string>
+    <string name="chooser_title">Open this web page with…</string>
+    <string name="results_loading_title">Loading…</string>
+    <string name="results_found_title">Results</string>
+    <string name="no_results_found_title">No Results Found</string>
+    <string name="no_data_results_title">You must type something in any of the fields!</string>
 </resources>
