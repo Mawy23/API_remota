@@ -117,8 +117,7 @@ public class MainActivity extends AppCompatActivity {
         Bundle queryBundle = new Bundle();
         queryBundle.putString(BookLoaderCallbacks.EXTRA_QUERY, queryString);
         queryBundle.putString(BookLoaderCallbacks.EXTRA_PRINT_TYPE, printType);
-        LoaderManager.getInstance(this)
-                .restartLoader(BOOK_LOADER_ID, queryBundle, bookLoaderCallbacks);
+        LoaderManager.getInstance(this).restartLoader(BOOK_LOADER_ID, queryBundle, bookLoaderCallbacks);
 
          results_Title.setText("Loading...");
     }
