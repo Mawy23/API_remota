@@ -14,9 +14,7 @@ import java.util.List;
 
 public class BooksResultListAdapter extends RecyclerView.Adapter<BooksResultListAdapter.ViewHolder> {
 
-    // TODO
-    // private List<BookInfo> mBooksData = new ArrayList<>();
-    private ArrayList<BookInfo> mBooksData;
+    private List<BookInfo> mBooksData;
     private LayoutInflater mInflater;
 
     private OnItemClickListener mListener;
@@ -31,19 +29,12 @@ public class BooksResultListAdapter extends RecyclerView.Adapter<BooksResultList
 
     public BooksResultListAdapter(Context context, ArrayList<BookInfo> bookInfoList){
         mInflater = LayoutInflater.from(context);
-        mBooksData = bookInfoList;
+        mBooksData = new ArrayList<>(bookInfoList);
     }
 
 
     public void setBooksData(List<BookInfo> data) {
-        // TODO
-        // mBooksData = data;
-
-        mBooksData.clear();
-        for(int i = 0; i < data.size(); i++) {
-            BookInfo entry = new BookInfo(data.get(i).getTitle(), data.get(i).getAuthors(), data.get(i).getInfoLink());
-            mBooksData.add(entry);
-        }
+        mBooksData = data;
     }
 
 

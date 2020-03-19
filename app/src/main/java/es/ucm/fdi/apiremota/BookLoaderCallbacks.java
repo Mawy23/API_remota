@@ -1,5 +1,6 @@
 package es.ucm.fdi.apiremota;
 
+import androidx.annotation.NonNull;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import android.content.Context;
@@ -28,7 +29,7 @@ class BookLoaderCallbacks implements LoaderManager.LoaderCallbacks<List<BookInfo
         return new BookLoader(_context, args.getString(EXTRA_QUERY), args.getString(EXTRA_PRINT_TYPE));
     }
 
-    public void onLoadFinished(Loader<List<BookInfo>> loader, List<BookInfo> data) {
+    public void onLoadFinished(@NonNull Loader<List<BookInfo>> loader, List<BookInfo> data) {
         // TODO
         // ¿Está bien esto?
         _mainActivity.updateBooksResultList(data);
