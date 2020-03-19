@@ -40,5 +40,4 @@ class BookLoaderCallbacks implements LoaderManager.LoaderCallbacks<List<BookInfo
 
     }
 
-
 }

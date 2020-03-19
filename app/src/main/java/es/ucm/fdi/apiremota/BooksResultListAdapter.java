@@ -84,7 +84,7 @@ public class BooksResultListAdapter extends RecyclerView.Adapter<BooksResultList
             this.mAdapter = adapter;
 
             // Set onClickListener
-            itemView.setOnClickListener(new View.OnClickListener() {
+            item_infoLink_textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(listener != null){
